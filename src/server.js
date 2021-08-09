@@ -4,10 +4,16 @@ import express from "express";
 const PORT = 4000;
 const app = express();
 
-const handleHome = (request, response) => {
-  response.send(`<h1>some html?</h1>`);
+const gossipMiddleware = (req, res, next) => {
+  console.log(`Someone is going to : ${req.url}`);
+  next();
 };
-app.get("/", handleHome);
+
+const handleHome = (req, res) => {
+  res.send(`<h1>some html?</h1>`);
+};
+app.get("/", gossipMiddleware, handleHome);
+
 const handleLogin = (req, res) => {
   return res.send({ message: "login" });
 };
