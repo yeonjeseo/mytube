@@ -4,15 +4,25 @@ import express from "express";
 const PORT = 4000;
 const app = express();
 
-const gossipMiddleware = (req, res, next) => {
-  console.log(`Someone is going to : ${req.url}`);
+const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+};
+
+const privateMiddleware = (req, res, next) => {
+  const url = req.url;
+  if (url === "/protected") {
+    return res.send("<h1>Not Allowed!</h1>");
+  }
+  console.log("Allowed, You may continue.");
   next();
 };
 
 const handleHome = (req, res) => {
   res.send(`<h1>some html?</h1>`);
 };
-app.get("/", gossipMiddleware, handleHome);
+
+app.get("/", logger, handleHome);
 
 const handleLogin = (req, res) => {
   return res.send({ message: "login" });
