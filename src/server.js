@@ -4,25 +4,26 @@ import express from "express";
 const PORT = 4000;
 const app = express();
 
-const logger = (req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
+const routerLogger = (req, res, next) => {
+  console.log("PATH", req.path);
   next();
 };
-
-const privateMiddleware = (req, res, next) => {
-  const url = req.url;
-  if (url === "/protected") {
-    return res.send("<h1>Not Allowed!</h1>");
-  }
-  console.log("Allowed, You may continue.");
+const methodLogger = (req, res, next) => {
+  console.log("METHOD", req.method);
   next();
 };
-
-const handleHome = (req, res) => {
-  res.send(`<h1>some html?</h1>`);
+const home = (req, res) => {
+  console.log("This is home");
+  return res.send("I will respond to home request");
+};
+const login = (req, res) => {
+  console.log("This is login");
+  return res.send("I will respond to login request");
 };
 
-app.get("/", logger, handleHome);
+app.use(routerLogger, methodLogger);
+app.get("/", home);
+app.get("/login", login);
 
 const handleLogin = (req, res) => {
   return res.send({ message: "login" });
