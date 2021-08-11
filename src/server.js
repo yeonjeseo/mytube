@@ -11,7 +11,8 @@ const logger = morgan("dev");
 
 // Set view engine as pug
 app.set("view engine", "pug");
-console.log(process.cwd());
+// Set lookup folder for the views
+app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 
 app.use("/", globalRouter);
