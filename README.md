@@ -7,12 +7,13 @@
 /search -> Search
 
 **_ USERS ROUTER _**
-/users/edit-> Edit user
-/users/delete -> Delete user
+/users/:id → see user
+/users/logout → log out
+/users/edit → edit my profile
+/users/delete → delete my profile
 
 **_ VIDEOS ROUTER _**
-/videos/watch -> Watch Video
-/videos/edit -> Edit Video
-/videos/delete -> Delete Video
-/videos/comments -> Comment on a video
-/videos/comments/delete -> Delete A Comment of a Video
+/videos/:id → see video
+/videos/:id/edit → edit video
+/videos/:id/delete → delete video
+/videos/upload → upload video
