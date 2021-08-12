@@ -2,6 +2,20 @@ doctype html
 html(lang="ko")
   head
     title #{pageTitle} | MyTube
+    link(rel="stylesheet" href="https://unpkg.com/mvp.css")
   body
-    block content
+    header 
+      if fakeUser.loggedIn 
+        small Hello #{fakeUser.userName}
+      nav 
+        ul
+          if fakeUser.loggedIn
+            li 
+              a(href="/login") Log out
+          else 
+            li
+              a(href="/login") Log in
+      h1=pageTitle
+    main
+      block content
   include partials/footer.pug
