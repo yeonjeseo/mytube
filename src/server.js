@@ -1,5 +1,6 @@
 // import whole file
 import "./db";
+import "./models/video";
 // const express = require("express");
 import express from "express";
 import morgan from "morgan";
