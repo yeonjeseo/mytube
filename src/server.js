@@ -1,3 +1,5 @@
+// import whole file
+import "./db";
 // const express = require("express");
 import express from "express";
 import morgan from "morgan";
