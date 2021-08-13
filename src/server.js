@@ -13,8 +13,10 @@ const logger = morgan("dev");
 app.set("view engine", "pug");
 // Set lookup folder for the views
 app.set("views", process.cwd() + "/src/views");
-app.use(logger);
+// let express uderstands and transforms the form values into javascript
+app.use(express.urlencoded({ extended: true }));
 
+app.use(logger);
 app.use("/", globalRouter);
 app.use("/users", usersRouter);
 app.use("/videos", videoRouter);
