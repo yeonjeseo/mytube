@@ -40,26 +40,45 @@ export const getUpload = (req, res) => {
   res.render("upload", { pageTitle: "Upload Video" });
 };
 
-export const postUpload = (req, res) => {
+export const postUpload = async (req, res) => {
   const { title, description, hashtags } = req.body;
-  console.log(title, description, hashtags);
-  const video = new Video({
+
+  await Video.create({
     title,
     description,
     createdAt: Date.now(),
     hashtags: hashtags
       .split(",")
       .map((item) => item.trim())
-      .map((item) => {
-        return item[0] === "#" ? item : "#" + item;
-      }),
+      .map((item) => (item[0] === "#" ? item : "#" + item)),
     meta: {
       views: 0,
       rating: 0,
     },
   });
-
-  console.log(video);
+  // const video = new Video({
+  //   title,
+  //   description,
+  //   createdAt: Date.now(),
+  //   hashtags: hashtags
+  //     .split(",")
+  //     .map((item) => item.trim())
+  //     .map((item) => {
+  //       return item[0] === "#" ? item : "#" + item;
+  //     }),
+  //   meta: {
+  //     views: 0,
+  //     rating: 0,
+  //   },
+  // });
+  // await video
+  //   .save()
+  //   .then((item) => {
+  //     console.log(`${item} saved to DB`);
+  //   })
+  //   .catch((error) => {
+  //     console.log(`Error occures : ${error}`);
+  //   });
   return res.redirect("/");
 };
 export const deleteVideo = (req, res) => res.send("Delete Video");
