@@ -17,9 +17,20 @@ export const home = async (req, res) => {
 export const watch = (req, res) => {
   //ES6 way
   const { id } = req.params;
-  return res.render("watch", {
-    pageTitle: `Watching :`,
-  });
+  console.log(id);
+
+  //url에서 받은 id로 DB 내의 비디오를 찾음
+  Video.findById(id)
+    .then((video) => {
+      return res.render("watch", {
+        pageTitle: video.title,
+        video,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.redirect("/");
+    });
 };
 
 //form을 화면에 보여주는 컨트롤러
