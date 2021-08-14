@@ -29,8 +29,8 @@ export const getEdit = (req, res) => {
 };
 
 export const postEdit = (req, res) => {
-  const { id } = req.params;
-  const { title } = req.body;
+  const { title, description, hashtags } = req.body;
+  console.log(title, description, hashtags);
   return res.redirect(`/videos/${id}`);
 };
 
@@ -41,6 +41,25 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = (req, res) => {
+  const { title, description, hashtags } = req.body;
+  console.log(title, description, hashtags);
+  const video = new Video({
+    title,
+    description,
+    createdAt: Date.now(),
+    hashtags: hashtags
+      .split(",")
+      .map((item) => item.trim())
+      .map((item) => {
+        return item[0] === "#" ? item : "#" + item;
+      }),
+    meta: {
+      views: 0,
+      rating: 0,
+    },
+  });
+
+  console.log(video);
   return res.redirect("/");
 };
 export const deleteVideo = (req, res) => res.send("Delete Video");
