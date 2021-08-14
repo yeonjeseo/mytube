@@ -43,19 +43,29 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
   const { title, description, hashtags } = req.body;
 
-  await Video.create({
-    title,
-    description,
-    createdAt: Date.now(),
-    hashtags: hashtags
-      .split(",")
-      .map((item) => item.trim())
-      .map((item) => (item[0] === "#" ? item : "#" + item)),
-    meta: {
-      views: 0,
-      rating: 0,
-    },
-  });
+  try {
+    await Video.create({
+      title,
+      description,
+      createdAt: Date.now(),
+      // hashtags: hashtags.split(","),
+      hashtags: hashtags //mongoose 모델에 옵션이 있네! 트림 옵션
+        .split(",")
+        .map((item) => item.trim())
+        .map((item) => (item[0] === "#" ? item : "#" + item)),
+      meta: {
+        views: 0,
+        rating: 0,
+      },
+    });
+
+    return res.redirect("/");
+  } catch (error) {
+    return res.render("upload", {
+      pageTitle: "Upload Video",
+      errorMessage: error._message,
+    });
+  }
   // const video = new Video({
   //   title,
   //   description,
@@ -79,6 +89,5 @@ export const postUpload = async (req, res) => {
   //   .catch((error) => {
   //     console.log(`Error occures : ${error}`);
   //   });
-  return res.redirect("/");
 };
 export const deleteVideo = (req, res) => res.send("Delete Video");
