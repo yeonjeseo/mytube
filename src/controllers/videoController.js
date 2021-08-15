@@ -1,3 +1,4 @@
+import { render } from "pug";
 import Video from "../models/video";
 
 export const home = async (req, res) => {
@@ -14,34 +15,45 @@ export const home = async (req, res) => {
   }
 };
 
-export const watch = (req, res) => {
+export const watch = async (req, res) => {
   //ES6 way
   const { id } = req.params;
-  console.log(id);
-
+  const video = await Video.findById(id);
+  if (video) {
+    return res.render("watch", { pageTitle: video.title, video });
+  }
+  return res.render("404", { pageTitle: "Video not found!" });
   //url에서 받은 id로 DB 내의 비디오를 찾음
-  Video.findById(id)
-    .then((video) => {
-      return res.render("watch", {
-        pageTitle: video.title,
-        video,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res.redirect("/");
-    });
+  // 이건 내 코드인데 일단 주석 처리 해놓고 강의 따라 가자
+  // Video.findById(id)
+  //   .exec()
+  //   .then((video) => {
+  //     console.log(`Video Object : ${video}`);
+  //     return res.render("watch", {
+  //       pageTitle: video.title,
+  //       video,
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     //오오 난 이미 없는 데이터에 대해 예외처리를 했네?!!
+  //     console.log(`Error : ${err}`);
+  //     console.log(err);
+  //     return res.redirect("/");
+  //   });
 };
 
 //form을 화면에 보여주는 컨트롤러
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
   const { id } = req.params;
-  return res.render("edit", { pageTitle: `Editing :  ${video.title}` });
+  const video = await Video.findById(id);
+  if (!video) return res.render("404", { pageTitle: "Video not found!" });
+  return res.render("edit", { pageTitle: `Edit ${video.title}`, video });
 };
 
 export const postEdit = (req, res) => {
+  const { id } = req.params;
   const { title, description, hashtags } = req.body;
-  console.log(title, description, hashtags);
+
   return res.redirect(`/videos/${id}`);
 };
 
