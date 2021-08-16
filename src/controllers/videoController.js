@@ -55,15 +55,12 @@ export const postEdit = async (req, res) => {
   const { title, description, hashtags } = req.body;
 
   const videoExists = await Video.exists({ _id: id });
-  if (!video) return res.render("404", { pageTitle: "Video not found!" });
+  if (!videoExists) return res.render("404", { pageTitle: "Video not found!" });
 
   await Video.findByIdAndUpdate(id, {
     title,
     description,
-    hashtags: hashtags
-      .split(",")
-      .map((item) => item.trim())
-      .map((item) => (item.startsWith("#") ? item : `#${item}`)),
+    hashtags: Video.formatHashtags(hashtags),
   });
   // video.title = title;
   // video.description = description;
@@ -83,23 +80,18 @@ export const getUpload = (req, res) => {
 
 export const postUpload = async (req, res) => {
   const { title, description, hashtags } = req.body;
-
   try {
     await Video.create({
       title,
       description,
       createdAt: Date.now(),
       // hashtags: hashtags.split(","),
-      hashtags: hashtags //mongoose 모델에 옵션이 있네! 트림 옵션
-        .split(",")
-        .map((item) => item.trim())
-        .map((item) => (item[0] === "#" ? item : "#" + item)),
+      hashtags: Video.formatHashtags(hashtags),
       meta: {
         views: 0,
         rating: 0,
       },
     });
-
     return res.redirect("/");
   } catch (error) {
     return res.render("upload", {
