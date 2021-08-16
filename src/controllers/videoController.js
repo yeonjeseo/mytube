@@ -1,13 +1,8 @@
-import { render } from "pug";
 import Video from "../models/video";
 
 export const home = async (req, res) => {
-  try {
-    const videos = await Video.find({});
-    return res.render("home", { pageTitle: "Home", videos });
-  } catch (err) {
-    return res.render("Server Error!", err);
-  }
+  const videos = await Video.find({}).sort({ createdAt: "desc" });
+  return res.render("home", { pageTitle: "Home", videos });
 };
 
 export const watch = async (req, res) => {
@@ -42,8 +37,6 @@ export const postEdit = async (req, res) => {
   return res.redirect(`/videos/${id}`);
 };
 
-export const search = (req, res) => res.send("Search Video");
-
 export const getUpload = (req, res) => {
   res.render("upload", { pageTitle: "Upload Video" });
 };
@@ -74,4 +67,18 @@ export const deleteVideo = async (req, res) => {
   const { id } = req.params;
   await Video.findByIdAndDelete(id);
   return res.redirect("/");
+};
+
+export const search = async (req, res) => {
+  let videos = [];
+  const { keyword } = req.query;
+  if (keyword) {
+    //search
+    videos = await Video.find({
+      title: {
+        $regex: new RegExp(keyword, "i"),
+      },
+    });
+  }
+  return res.render("search", { pageTitle: "Search", videos });
 };
