@@ -1,4 +1,23 @@
-export const join = (req, res) => res.send("Join User");
+//Use User model
+import User from "../models/User";
+
+// Request for join template
+export const getJoin = (req, res) =>
+  res.render("join", { pageTitle: "Create Account!" });
+
+// Send data to server
+export const postJoin = async (req, res) => {
+  // console.log(req.body);
+  const { username, email, name, password, location } = req.body;
+  await User.create({
+    name,
+    username,
+    email,
+    password,
+    location,
+  });
+  return res.redirect("/login");
+};
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const login = (req, res) => res.send("Log In");
