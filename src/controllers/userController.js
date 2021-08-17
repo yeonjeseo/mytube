@@ -1,14 +1,25 @@
 //Use User model
 import User from "../models/User";
 
-// Request for join template
+// Request for join
 export const getJoin = (req, res) =>
   res.render("join", { pageTitle: "Create Account!" });
 
 // Send data to server
 export const postJoin = async (req, res) => {
-  // console.log(req.body);
-  const { username, email, name, password, location } = req.body;
+  const pageTitle = "Create Account!";
+  const { username, email, name, password, password2, location } = req.body;
+
+  if (password !== password2)
+    return res.render("join", {
+      pageTitle,
+      errorMessage: "Password comfirmation does not match!",
+    });
+
+  const chkDuiplicate = await User.exists({ $or: [{ username }, { email }] });
+  if (chkDuiplicate)
+    return res.render("join", { pageTitle, errorMessage: "already taken" });
+
   await User.create({
     name,
     username,
