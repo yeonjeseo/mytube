@@ -1,3 +1,4 @@
+import session from "express-session";
 import Video from "../models/Video";
 
 export const home = async (req, res) => {

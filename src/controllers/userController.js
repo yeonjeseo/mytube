@@ -1,7 +1,7 @@
 //Use User model
 import User from "../models/User";
 import bcript from "bcrypt";
-import { render } from "pug";
+// import { render } from "pug";
 
 // Request for join
 export const getJoin = (req, res) =>
@@ -63,8 +63,8 @@ export const postLogin = async (req, res) => {
       .status(400)
       .render("login", { pageTitle, errorMessage: "Password is not correct!" });
   }
-
-  console.log("log user in! coming soon!");
+  req.session.loggedIn = true;
+  req.session.user = user;
   return res.redirect("/");
 };
 export const edit = (req, res) => res.send("Edit User");
