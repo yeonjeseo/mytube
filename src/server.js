@@ -6,6 +6,7 @@ import usersRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
 import session from "express-session";
 import { localsMiddlewares } from "./middlewares";
+import MongoStore from "connect-mongo";
 
 const app = express();
 const logger = morgan("dev");
@@ -21,8 +22,9 @@ app.use(logger);
 app.use(
   session({
     secret: "Hello",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/mytube" }),
   })
 );
 
