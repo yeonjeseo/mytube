@@ -2,6 +2,7 @@
 import User from "../models/User";
 import bcript from "bcrypt";
 import fetch from "node-fetch";
+import { access } from "fs";
 // import { render } from "pug";
 
 // Request for join
@@ -102,14 +103,51 @@ export const finishGithubLogin = async (req, res) => {
   if ("access_token" in tokenRequest) {
     //access api
     const { access_token } = tokenRequest;
-    const userRequest = await (
-      await fetch("https://api.github.com/user", {
+    const apiUrl = "https://api.github.com";
+    // 이건 유저 데이터만 가져옴
+    const userData = await (
+      await fetch(`${apiUrl}/user`, {
         headers: {
           Authorization: `token ${access_token}`,
         },
       })
     ).json();
-    console.log(userRequest);
+    // 이건 email 데이터
+    const emailData = await (
+      await fetch(`${apiUrl}/user/emails`, {
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    // 메서드 체인이 안 먹힘?!
+    // .find((emails) => email.primary && emails.verified);
+    const emailObj = emailData.find((item) => item.primary && item.verified);
+    if (!emailObj) return res.redirect("/login");
+    //emailObj의 이메일을 활용해서 유저를 찾음
+    //회원이 없을 경우, else로 넘어가야 하는데, find로 못 찾아도 빈 배열이 리턴됨 => 빈 배열은 nullish value가 아니라서 if로 넘어감
+    const existingUser = await User.findOne({ email: emailObj.email });
+    console.log(existingUser, "???");
+    if (existingUser) {
+      console.log(userData.name, "This means the user exists!");
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      return res.redirect("/");
+    } else {
+      //create an account
+      console.log(userData.name, "this means user not exists");
+      const user = await User.create({
+        name: userData.name,
+        socialOnly: true,
+        username: userData.login,
+        email: emailObj.email,
+        password: "",
+        location: userData.location,
+      });
+      req.session.loggedIn = true;
+      req.session.user = user;
+      return res.redirect("/");
+    }
   } else {
     return res.redirect("/login");
   }

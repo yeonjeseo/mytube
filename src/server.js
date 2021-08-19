@@ -1,5 +1,4 @@
 // const express = require("express");
-require("dotenv").config();
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/rootRouter";
@@ -27,7 +26,7 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: `${process.env.DB_URL}` }),
     cookie: {
-      maxAge: 20000,
+      maxAge: 30000,
     },
   })
 );
