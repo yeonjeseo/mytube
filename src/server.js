@@ -1,4 +1,5 @@
 // const express = require("express");
+require("dotenv").config();
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/rootRouter";
@@ -21,10 +22,13 @@ app.use(logger);
 
 app.use(
   session({
-    secret: "Hello",
+    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/mytube" }),
+    store: MongoStore.create({ mongoUrl: `${process.env.DB_URL}` }),
+    cookie: {
+      maxAge: 20000,
+    },
   })
 );
 
