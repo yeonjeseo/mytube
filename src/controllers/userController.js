@@ -50,7 +50,8 @@ export const postLogin = async (req, res) => {
   const pageTitle = "Log In";
 
   // check if account exists
-  const user = await User.findOne({ username });
+  // only not social only
+  const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
@@ -112,6 +113,7 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
+    console.log(userData);
     // 이건 email 데이터
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
@@ -126,33 +128,32 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) return res.redirect("/login");
     //emailObj의 이메일을 활용해서 유저를 찾음
     //회원이 없을 경우, else로 넘어가야 하는데, find로 못 찾아도 빈 배열이 리턴됨 => 빈 배열은 nullish value가 아니라서 if로 넘어감
-    const existingUser = await User.findOne({ email: emailObj.email });
-    console.log(existingUser, "???");
-    if (existingUser) {
-      console.log(userData.name, "This means the user exists!");
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-      return res.redirect("/");
-    } else {
+    let user = await User.findOne({ email: emailObj.email });
+    if (!user) {
       //create an account
       console.log(userData.name, "this means user not exists");
-      const user = await User.create({
+      user = await User.create({
         name: userData.name,
+        avatarUrl: userData.avatar_url,
         socialOnly: true,
         username: userData.login,
         email: emailObj.email,
         password: "",
         location: userData.location,
       });
-      req.session.loggedIn = true;
-      req.session.user = user;
-      return res.redirect("/");
     }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
   } else {
     return res.redirect("/login");
   }
 };
+
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
+};
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
-export const logout = (req, res) => res.send("Log Out");
 export const see = (req, res) => res.send("See User");
