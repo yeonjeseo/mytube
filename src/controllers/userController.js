@@ -157,7 +157,7 @@ export const logout = (req, res) => {
 };
 
 export const getEdit = (req, res) => {
-  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+  return res.render("user/edit-profile", { pageTitle: "Edit Profile" });
 };
 
 export const postEdit = async (req, res) => {
@@ -168,15 +168,14 @@ export const postEdit = async (req, res) => {
     body: { name, email, username, location },
   } = req;
   // create subset of session.user for comparison
-  const subset = (({ email, username }) => ({
+  const subset = (({ name, email, username, location }) => ({
+    name,
     email,
     username,
+    location,
   }))(req.session.user);
   const subsetStr = JSON.stringify(subset);
   const formStr = JSON.stringify({ email, username });
-  // console.log(subset);
-  // console.log({ email, username });
-  // console.log(subsetStr === formStr);
   //check if form value is different from session.user value
   if (subsetStr !== formStr) {
     console.log(req.session.user);
@@ -191,24 +190,59 @@ export const postEdit = async (req, res) => {
         pageTitle: "Edit Profile",
         errorMessage: "Already exists",
       });
+    } else {
+      // if not duplicated, update DB -> update session
+      // allow duplication for name, location
+      const updatedUser = await User.findByIdAndUpdate(
+        _id,
+        {
+          name,
+          email,
+          username,
+          location,
+        },
+        { new: true }
+      );
+      req.session.user = updatedUser;
+      return res.redirect("/users/edit");
     }
-    // if not duplicated, update DB -> update session
-    // allow duplication for name, location
-    const updatedUser = await User.findByIdAndUpdate(
-      _id,
-      {
-        name,
-        email,
-        username,
-        location,
-      },
-      { new: true }
-    );
-    req.session.user = updatedUser;
-    return res.redirect("/users/edit");
   }
   //if form value is equal to session.user value, send user to root
   return res.redirect("/");
+};
+
+export const getChangePassword = (req, res) => {
+  return res.render("user/change-password", { pageTitle: "Change Password" });
+};
+export const postChangePassword = async (req, res) => {
+  //누가? 비밀번호를 변경하려는지 알아야함.
+  const {
+    session: {
+      user: { _id, password },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirm },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcript.compare(oldPassword, user.password);
+  if (!ok)
+    return res.status(400).render("user/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The current password is incorrect",
+    });
+  if (newPassword !== newPasswordConfirm) {
+    return res.status(400).render("user/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "Check your password confirmation",
+    });
+  }
+  console.log(user.password);
+  user.password = newPassword;
+  console.log(user.password);
+  await user.save();
+  console.log(user.password);
+  // send notification
+
+  return res.redirect("/users/logout");
 };
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See User");
