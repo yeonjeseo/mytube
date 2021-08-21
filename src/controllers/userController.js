@@ -3,6 +3,7 @@ import User from "../models/User";
 import bcript from "bcrypt";
 import fetch from "node-fetch";
 import { access } from "fs";
+import { profile } from "console";
 // import { render } from "pug";
 
 // Request for join
@@ -20,8 +21,8 @@ export const postJoin = async (req, res) => {
       errorMessage: "Password comfirmation does not match!",
     });
 
-  const chkDuiplicate = await User.exists({ $or: [{ username }, { email }] });
-  if (chkDuiplicate)
+  const chkDuplicate = await User.exists({ $or: [{ username }, { email }] });
+  if (chkDuplicate)
     return res
       .status(400)
       .render("join", { pageTitle, errorMessage: "already taken" });
@@ -154,6 +155,60 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
-export const edit = (req, res) => res.send("Edit User");
+
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { name, email, username, location },
+  } = req;
+  // create subset of session.user for comparison
+  const subset = (({ email, username }) => ({
+    email,
+    username,
+  }))(req.session.user);
+  const subsetStr = JSON.stringify(subset);
+  const formStr = JSON.stringify({ email, username });
+  // console.log(subset);
+  // console.log({ email, username });
+  // console.log(subsetStr === formStr);
+  //check if form value is different from session.user value
+  if (subsetStr !== formStr) {
+    console.log(req.session.user);
+    // use $and: [{ _id: { $ne: _id } } to except current user's DB
+    const chkDuplicate = await User.exists({
+      $and: [{ _id: { $ne: _id } }, { $or: [{ username }, { email }] }],
+    });
+    // at least 1 value is duplicated
+    if (chkDuplicate) {
+      console.log("duplication!");
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "Already exists",
+      });
+    }
+    // if not duplicated, update DB -> update session
+    // allow duplication for name, location
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      {
+        name,
+        email,
+        username,
+        location,
+      },
+      { new: true }
+    );
+    req.session.user = updatedUser;
+    return res.redirect("/users/edit");
+  }
+  //if form value is equal to session.user value, send user to root
+  return res.redirect("/");
+};
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See User");
