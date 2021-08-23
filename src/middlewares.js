@@ -1,3 +1,5 @@
+import multer from "multer";
+
 export const localsMiddlewares = (req, res, next) => {
   //locals object에 loggedIn 넘기기
   // 결과가 undefined같은 이상한 놈일 수 있으니 Boolean 객체로 만들어줌
@@ -14,8 +16,6 @@ export const protectorMiddleware = (req, res, next) => {
   } else {
     return res.redirect("/login");
   }
-
-  // 내가 로그인을 이미 했는데 다시 로그인을 해도 안됨!
 };
 
 export const publicOnlyMiddleware = (req, res, next) => {
@@ -25,3 +25,5 @@ export const publicOnlyMiddleware = (req, res, next) => {
     return res.redirect("/");
   }
 };
+
+export const uploadFiles = multer({ dest: "uploads/" });

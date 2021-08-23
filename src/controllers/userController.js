@@ -163,9 +163,10 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req;
   // create subset of session.user for comparison
   const subset = (({ name, email, username, location }) => ({
@@ -175,10 +176,9 @@ export const postEdit = async (req, res) => {
     location,
   }))(req.session.user);
   const subsetStr = JSON.stringify(subset);
-  const formStr = JSON.stringify({ email, username });
+  const formStr = JSON.stringify({ name, email, username, location });
   //check if form value is different from session.user value
   if (subsetStr !== formStr) {
-    console.log(req.session.user);
     // use $and: [{ _id: { $ne: _id } } to except current user's DB
     const chkDuplicate = await User.exists({
       $and: [{ _id: { $ne: _id } }, { $or: [{ username }, { email }] }],
@@ -196,7 +196,7 @@ export const postEdit = async (req, res) => {
       const updatedUser = await User.findByIdAndUpdate(
         _id,
         {
-          name,
+          avatarUrl: file ? file.path : avatarUrl,
           email,
           username,
           location,
