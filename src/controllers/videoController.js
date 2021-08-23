@@ -45,11 +45,16 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = async (req, res) => {
-  const { title, description, hashtags } = req.body;
+  const {
+    body: { title, description, hashtags },
+    file,
+  } = req;
+  console.log(file || "No File uploaded");
   try {
     await Video.create({
       title,
       description,
+      fileUrl: file.path,
       createdAt: Date.now(),
       // hashtags: hashtags.split(","),
       hashtags: Video.formatHashtags(hashtags),
@@ -60,12 +65,13 @@ export const postUpload = async (req, res) => {
     });
     return res.redirect("/");
   } catch (error) {
-    return res.status(400).render("upload", {
+    return res.status(400).render("video/upload", {
       pageTitle: "Upload Video",
       errorMessage: error._message,
     });
   }
 };
+
 export const deleteVideo = async (req, res) => {
   const { id } = req.params;
   await Video.findByIdAndDelete(id);

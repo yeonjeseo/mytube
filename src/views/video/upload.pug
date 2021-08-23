@@ -4,7 +4,9 @@ block content
   if errorMessage
     span(style="color:red")=errorMessage
   h3 Upload Video
-  form(method="POST" action="/videos/upload")
+  form(method="POST" action="/videos/upload", enctype="multipart/form-data")
+    label(for="video") Video File
+    input(type="file", accpet="video/*", required, id="video", name="video")
     input(name="title" placeholder="Your Video Title" required, maxlength=50)
     input(name="description" placeholder="Description" required, maxlength=100)
     input(name="hashtags" placeholder="Hashtags, separated by comma " required)
