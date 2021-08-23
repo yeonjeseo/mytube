@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 import { access } from "fs";
 import { profile } from "console";
 import { resolveSoa } from "dns";
+import Video from "../models/Video";
 // import { render } from "pug";
 
 // Request for join
@@ -256,8 +257,12 @@ export const see = async (req, res) => {
   if (!user) {
     return res.status(404).render("404");
   }
+  //id로 Video 모델에서 onwer 조회해서 모든 비디오 찾기
+  const videos = await Video.find({ owner: user.id });
+  console.log(videos);
   return res.render("user/profile", {
     pageTitle: user.name,
     user,
+    videos,
   });
 };

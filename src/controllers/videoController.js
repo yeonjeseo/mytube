@@ -10,12 +10,10 @@ export const home = async (req, res) => {
 export const watch = async (req, res) => {
   //ES6 way
   const { id } = req.params;
-  const video = await Video.findById(id);
-  const owner = await User.findById(video.owner);
-  if (video) {
-    return res.render("watch", { pageTitle: video.title, video, owner });
-  }
-  return res.status(404).render("404", { pageTitle: "Video not found!" });
+  const video = await Video.findById(id).populate("owner");
+  if (!video)
+    return res.status("404").render("404", { pageTitle: "Video not found!" });
+  return res.render("watch", { pageTitle: video.title, video });
 };
 
 //form을 화면에 보여주는 컨트롤러
