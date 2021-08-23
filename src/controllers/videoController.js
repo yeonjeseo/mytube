@@ -1,4 +1,5 @@
 import session from "express-session";
+import User from "../models/User";
 import Video from "../models/Video";
 
 export const home = async (req, res) => {
@@ -10,8 +11,9 @@ export const watch = async (req, res) => {
   //ES6 way
   const { id } = req.params;
   const video = await Video.findById(id);
+  const owner = await User.findById(video.owner);
   if (video) {
-    return res.render("watch", { pageTitle: video.title, video });
+    return res.render("watch", { pageTitle: video.title, video, owner });
   }
   return res.status(404).render("404", { pageTitle: "Video not found!" });
 };
@@ -45,19 +47,24 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = async (req, res) => {
+  console.log(req.session.user);
   const {
+    session: {
+      user: { _id },
+    },
     body: { title, description, hashtags },
     file,
   } = req;
-  console.log(file || "No File uploaded");
   try {
     await Video.create({
       title,
       description,
       fileUrl: file.path,
       createdAt: Date.now(),
+      owner: _id,
       // hashtags: hashtags.split(","),
       hashtags: Video.formatHashtags(hashtags),
+
       meta: {
         views: 0,
         rating: 0,

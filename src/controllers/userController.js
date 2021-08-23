@@ -4,6 +4,7 @@ import bcript from "bcrypt";
 import fetch from "node-fetch";
 import { access } from "fs";
 import { profile } from "console";
+import { resolveSoa } from "dns";
 // import { render } from "pug";
 
 // Request for join
@@ -245,4 +246,18 @@ export const postChangePassword = async (req, res) => {
   return res.redirect("/users/logout");
 };
 export const remove = (req, res) => res.send("Remove User");
-export const see = (req, res) => res.send("See User");
+
+export const see = async (req, res) => {
+  //user session이 아니라 url에서 id 가져오기
+  //public 으로 만들 거니까 url에서 가져온다??
+  const { id } = req.params;
+  const user = await User.findById(id);
+  //해당 유저가 존재하지 않을 경우 예외처리 미리 해줘야 함.
+  if (!user) {
+    return res.status(404).render("404");
+  }
+  return res.render("user/profile", {
+    pageTitle: user.name,
+    user,
+  });
+};
