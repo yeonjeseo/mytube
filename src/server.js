@@ -43,6 +43,7 @@ app.use(localsMiddlewares);
 app.use("/", globalRouter);
 app.use("/users", usersRouter);
 app.use("/videos", videoRouter);
+app.use("/uploads", express.static("uploads"));
 
 const handleLogin = (req, res) => {
   return res.send({ message: "login" });
