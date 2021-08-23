@@ -18,20 +18,29 @@ export const watch = async (req, res) => {
 
 //form을 화면에 보여주는 컨트롤러
 export const getEdit = async (req, res) => {
+  //video id
   const { id } = req.params;
+  //user id
+  const {
+    user: { _id },
+  } = req.session;
   const video = await Video.findById(id);
   if (!video)
     return res.status(404).render("404", { pageTitle: "Video not found!" });
+  if (String(video.owner) !== String(_id)) return res.status(403).redirect("/");
   return res.render("video/edit", { pageTitle: `Edit ${video.title}`, video });
 };
 
 export const postEdit = async (req, res) => {
   const { id } = req.params;
   const { title, description, hashtags } = req.body;
-
+  const {
+    user: { _id },
+  } = req.session;
   const videoExists = await Video.exists({ _id: id });
   if (!videoExists)
     return res.status(404).render("404", { pageTitle: "Video not found!" });
+  if (String(video.owner) !== String(_id)) return res.status(403).redirect("/");
   await Video.findByIdAndUpdate(id, {
     title,
     description,
@@ -80,6 +89,13 @@ export const postUpload = async (req, res) => {
 
 export const deleteVideo = async (req, res) => {
   const { id } = req.params;
+  const {
+    user: { _id },
+  } = req.session;
+  const video = await Video.findById(id);
+  if (!videoExists)
+    return res.status(404).render("404", { pageTitle: "Video not found!" });
+  if (String(video.owner) !== String(_id)) return res.status(403).redirect("/");
   await Video.findByIdAndDelete(id);
   return res.redirect("/");
 };
