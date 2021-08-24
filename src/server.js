@@ -31,19 +31,12 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   console.log(res);
-//   req.sessionStore.all((error, sessions) => {
-//     console.log(sessions);
-//     next();
-//   });
-// });
-
 app.use(localsMiddlewares);
 app.use("/", globalRouter);
 app.use("/users", usersRouter);
 app.use("/videos", videoRouter);
 app.use("/uploads", express.static("uploads"));
+app.use("/static", express.static("assets"));
 
 const handleLogin = (req, res) => {
   return res.send({ message: "login" });
