@@ -5,14 +5,16 @@ module.exports = {
   mode: "development",
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "css/style.css",
+      filename: "css/styles.css",
     }),
   ],
   entry: "./src/client/js/main.js",
   output: {
     filename: "js/main.js",
     path: path.resolve(__dirname, "assets"),
+    clean: true,
   },
+  watch: true,
   module: {
     rules: [
       {
