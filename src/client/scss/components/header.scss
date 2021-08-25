@@ -1,5 +1,3 @@
-@import "../config/variables";
-
 header {
   padding: 20px 50px;
   display: flex;
@@ -28,5 +26,10 @@ header {
     color: $bg;
     padding: 5px 10px;
     border-radius: 5px;
+  }
+  .header__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
 }

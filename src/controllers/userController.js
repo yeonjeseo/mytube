@@ -2,10 +2,7 @@
 import User from "../models/User";
 import bcript from "bcrypt";
 import fetch from "node-fetch";
-import { access } from "fs";
-import { profile } from "console";
-import { resolveSoa } from "dns";
-import Video from "../models/Video";
+// import Video from "../models/Video";
 // import { render } from "pug";
 
 // Request for join
@@ -252,17 +249,32 @@ export const see = async (req, res) => {
   //user session이 아니라 url에서 id 가져오기
   //public 으로 만들 거니까 url에서 가져온다??
   const { id } = req.params;
-  const user = await User.findById(id).populate("videos");
+  // const user = await User.findById(id).populate("videos");
+  //double populate
+  const user = await User.findById(id).populate({
+    path: "videos",
+    populate: {
+      path: "owner",
+      model: "User",
+    },
+  });
   console.log(user);
   //해당 유저가 존재하지 않을 경우 예외처리 미리 해줘야 함.
   if (!user) {
     return res.status(404).render("404");
   }
-  //id로 Video 모델에서 onwer 조회해서 모든 비디오 찾기
-  const videos = await Video.find({ owner: user.id });
-  console.log(videos);
   return res.render("user/profile", {
     pageTitle: user.name,
     user,
   });
+
+  //id로 Video 모델에서 onwer 조회해서 모든 비디오 찾기
+  // 이거는 비디오 모델에서 싹 다 가져온거고
+  // const videos = await Video.find({ owner: user.id });
+  // return res.render("user/profile", {
+  //   pageTitle: user.name,
+  //   user,
+  // });
+
+  //populate 활용해보자
 };

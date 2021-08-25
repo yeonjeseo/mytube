@@ -3,7 +3,10 @@ import User from "../models/User";
 import Video from "../models/Video";
 
 export const home = async (req, res) => {
-  const videos = await Video.find({}).sort({ createdAt: "desc" });
+  const videos = await Video.find({})
+    .sort({ createdAt: "desc" })
+    .populate("owner");
+  console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
 
@@ -50,7 +53,7 @@ export const postEdit = async (req, res) => {
 };
 
 export const getUpload = (req, res) => {
-  res.render("video/upload", { pageTitle: "Upload Video" });
+  res.render("videos/upload", { pageTitle: "Upload Video" });
 };
 
 export const postUpload = async (req, res) => {
@@ -102,6 +105,9 @@ export const deleteVideo = async (req, res) => {
 
 export const search = async (req, res) => {
   let videos = [];
+  // 폼으로 작성한건 req.query로 넘어옴
+  // 그 중에서 keyword는 input tag 에서 name을 keyword로 정했기 때문에 keyword로 넘어옴
+  // console.log(keyword);
   const { keyword } = req.query;
   if (keyword) {
     //search
