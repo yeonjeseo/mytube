@@ -7,6 +7,7 @@
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/client/js/main.js":
@@ -15,7 +16,6 @@
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _scss_styles_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scss/styles.scss */ \"./src/client/scss/styles.scss\");\n\nconsole.log(\"Hello\");\n\n//# sourceURL=webpack://mytube/./src/client/js/main.js?");
 
 /***/ }),
@@ -24,9 +24,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _scs
 /*!*************************************!*\
   !*** ./src/client/scss/styles.scss ***!
   \*************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("throw new Error(\"Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\\nSassError: expected \\\";\\\".\\n  ╷\\n9 │   a {\\n  │     ^\\n  ╵\\n  src/client/scss/styles.scss 9:5  root stylesheet\\n    at processResult (/Users/jeffrey/Desktop/mytube/node_modules/webpack/lib/NormalModule.js:721:19)\\n    at /Users/jeffrey/Desktop/mytube/node_modules/webpack/lib/NormalModule.js:827:5\\n    at /Users/jeffrey/Desktop/mytube/node_modules/loader-runner/lib/LoaderRunner.js:399:11\\n    at /Users/jeffrey/Desktop/mytube/node_modules/loader-runner/lib/LoaderRunner.js:251:18\\n    at context.callback (/Users/jeffrey/Desktop/mytube/node_modules/loader-runner/lib/LoaderRunner.js:124:13)\\n    at /Users/jeffrey/Desktop/mytube/node_modules/sass-loader/dist/index.js:54:7\\n    at Function.call$2 (/Users/jeffrey/Desktop/mytube/node_modules/sass/sass.dart.js:94122:16)\\n    at _render_closure1.call$2 (/Users/jeffrey/Desktop/mytube/node_modules/sass/sass.dart.js:82377:12)\\n    at _RootZone.runBinary$3$3 (/Users/jeffrey/Desktop/mytube/node_modules/sass/sass.dart.js:27674:18)\\n    at _FutureListener.handleError$1 (/Users/jeffrey/Desktop/mytube/node_modules/sass/sass.dart.js:26223:19)\");\n\n//# sourceURL=webpack://mytube/./src/client/scss/styles.scss?");
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://mytube/./src/client/scss/styles.scss?");
 
 /***/ })
 
