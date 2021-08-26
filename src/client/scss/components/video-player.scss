@@ -1,0 +1,93 @@
+#videoContainer {
+  width: 100%;
+  position: relative;
+  video {
+    width: 100%;
+  }
+
+  .playEffect {
+    background-image: url("https://cdn.iconscout.com/icon/free/png-512/play-button-1659428-1408818.png");
+    background-size: 100px 100px;
+    display: flex;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 50%;
+    margin-left: -50px;
+    top: 50%;
+    margin-top: -50px;
+    animation: blowUp 0.6s;
+    opacity: 0;
+  }
+
+  .pauseEffect {
+    background-image: url("https://cdn.iconscout.com/icon/free/png-256/pause-107-439136.png");
+    background-size: 100px 100px;
+    display: flex;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 50%;
+    margin-left: -50px;
+    top: 50%;
+    margin-top: -50px;
+    animation: blowUp 0.6s;
+    opacity: 0;
+  }
+
+  @keyframes blowUp {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+  .videoControls {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    &.showing {
+      opacity: 1;
+    }
+    align-items: center;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 10px;
+    width: 95%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr auto;
+    gap: 10px;
+    justify-content: space-between;
+    background-color: #0f1117;
+    padding: 10px;
+    left: 0;
+    box-sizing: border-box;
+    .videoControls__play {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      .videoControls__playBtn {
+        margin: 0px 15px;
+      }
+      .videoControls__time {
+        font-size: 12px;
+      }
+    }
+    .videoControls__volume {
+      display: flex;
+      align-items: center;
+      span {
+        margin-left: 10px;
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
