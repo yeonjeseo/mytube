@@ -128,12 +128,20 @@ const handleplayPauseEffect = () => {
   }
 };
 
+const handleEnded = () => {
+  const videoId = videoContainer.dataset.videoid;
+  fetch(`/api/videos/${videoId}/view`, {
+    method: "POST",
+  });
+};
+
 playBtn.addEventListener("click", handlePlayPause);
 muteBtn.addEventListener("click", handleMuteUnmute);
 volumeRange.addEventListener("input", handleVolumeChange);
 video.addEventListener("loadeddata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("click", handlePlayPause);
+video.addEventListener("ended", handleEnded);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 timeline.addEventListener("input", handleTimelineChange);
