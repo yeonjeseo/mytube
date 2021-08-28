@@ -1,4 +1,5 @@
 import { async } from "regenerator-runtime";
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
 const recordBtn = document.getElementById("recordBtn");
 const video = document.getElementById("preview");
@@ -19,7 +20,18 @@ const init = async () => {
 };
 init();
 
-const handleDownload = () => {
+const handleDownload = async () => {
+  // create FFmpeg instance
+  const ffmpeg = createFFmpeg({
+    corePath: "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js",
+    log: true,
+  });
+  await ffmpeg.load();
+  // videoFile is pointer to browser memory, but itself is a blob
+  ffmpeg.FS("writeFile", "recording.webm", await fetchFile(videoFile));
+  //ffmpeg cli command
+  await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4");
+
   const a = document.createElement("a");
   a.href = videoFile;
   a.download = "MyRecording.webm";
@@ -52,10 +64,10 @@ const startRecording = (event) => {
   event.target.textContent = "Stop Recording";
 };
 
-const stopRecording = async (event) => {
+const stopRecording = (event) => {
   record.stop();
   event.target.textContent = "Start Recording";
-  setTimeout(handleDownload(), 1000);
+  handleDownload();
 };
 
 recordBtn.addEventListener("click", handleRecording);

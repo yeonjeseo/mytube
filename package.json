@@ -19,6 +19,8 @@
   "homepage": "https://github.com/yeonjeseo/mytube#readme",
   "dependencies": {
     "@babel/runtime": "^7.15.3",
+    "@ffmpeg/core": "^0.10.0",
+    "@ffmpeg/ffmpeg": "^0.9.7",
     "bcrypt": "^5.0.1",
     "connect-mongo": "^4.5.0",
     "dotenv": "^10.0.0",
@@ -38,6 +40,7 @@
     "@babel/preset-env": "^7.15.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.2.0",
+    "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^2.2.0",
     "nodemon": "^2.0.12",
     "sass": "^1.38.1",
