@@ -57,7 +57,6 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = async (req, res) => {
-  console.log(req.session.user);
   const {
     session: {
       user: { _id },
@@ -83,7 +82,7 @@ export const postUpload = async (req, res) => {
     user.save();
     return res.redirect("/");
   } catch (error) {
-    return res.status(400).render("video/upload", {
+    return res.status(400).render("videos/upload", {
       pageTitle: "Upload Video",
       errorMessage: error._message,
     });
