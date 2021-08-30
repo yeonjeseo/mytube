@@ -8,6 +8,7 @@ import session from "express-session";
 import { localsMiddlewares } from "./middlewares";
 import MongoStore from "connect-mongo";
 import apiRouter from "./routers/apiRouter";
+import flash from "express-flash";
 
 const app = express();
 const logger = morgan("dev");
@@ -36,6 +37,7 @@ app.use(
     // },
   })
 );
+app.use(flash());
 
 app.use(localsMiddlewares);
 app.use("/", globalRouter);

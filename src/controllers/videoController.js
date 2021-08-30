@@ -35,20 +35,32 @@ export const getEdit = async (req, res) => {
 };
 
 export const postEdit = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, hashtags } = req.body;
   const {
-    user: { _id },
-  } = req.session;
+    params: { id },
+    body: { title, description, hashtags },
+    session: {
+      user: { _id },
+    },
+  } = req;
+
+  // const { id } = req.params;
+  // const { title, description, hashtags } = req.body;
+  // const {
+  //   user: { _id },
+  // } = req.session;
   const videoExists = await Video.exists({ _id: id });
   if (!videoExists)
     return res.status(404).render("404", { pageTitle: "Video not found!" });
-  if (String(video.owner) !== String(_id)) return res.status(403).redirect("/");
+  if (String(video.owner) !== String(_id)) {
+    req.flash("error", "You are not the owner");
+    return res.status(403).redirect("/");
+  }
   await Video.findByIdAndUpdate(id, {
     title,
     description,
     hashtags: Video.formatHashtags(hashtags),
   });
+  req.flash("success", "Changes saved!");
   return res.redirect(`/videos/${id}`);
 };
 
