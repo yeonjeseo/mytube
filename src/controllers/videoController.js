@@ -1,6 +1,7 @@
 import session from "express-session";
 import User from "../models/User";
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
   const videos = await Video.find({})
@@ -144,8 +145,24 @@ export const registerView = async (req, res) => {
   return res.sendStatus(200);
 };
 
-export const createComment = (req, res) => {
-  console.log(req.params);
-  console.log(req.body);
-  res.end();
+export const createComment = async (req, res) => {
+  const {
+    session: { user },
+    params: { id: videoId },
+    body: { text: comment },
+  } = req;
+
+  const video = await Video.findById(videoId);
+  // const user = await User.findById(user._id);
+
+  await Comment.create({
+    author: user._id,
+    video: videoId,
+    comment,
+    createdAt: Date.now(),
+  });
+
+  if (!video) return res.sendStatus("404");
+
+  return res.sendStatus("201");
 };
