@@ -24,6 +24,8 @@ app.set("views", process.cwd() + "/src/views");
 // });
 // let express uderstands and transforms the form values into javascript
 app.use(express.urlencoded({ extended: true }));
+// let express to understands the text data
+app.use(express.json());
 app.use(logger);
 
 app.use(
