@@ -96,6 +96,15 @@ const handleMouseMove = () => {
 const handleMouseLeave = () => {
   controlsTimeout = setTimeout(hideControls, 2000);
 };
+
+const listenKeyDown = (event) => {
+  if (event.target.tagName === "TEXTAREA") {
+    document.removeEventListener("keydown", handleKeyDown);
+  } else {
+    document.addEventListener("keydown", handleKeyDown);
+  }
+};
+
 const handleKeyDown = (event) => {
   let key = event.code;
 
@@ -146,6 +155,6 @@ videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
-document.addEventListener("keydown", handleKeyDown);
+document.addEventListener("keydown", listenKeyDown);
 
 // video.addEventListener("click", handleplayPauseEffect);

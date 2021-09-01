@@ -159,7 +159,6 @@ export const createComment = async (req, res) => {
     author: user._id,
     video: videoId,
     comment,
-    createdAt: Date.now(),
   });
 
   if (!video) return res.sendStatus("404");
