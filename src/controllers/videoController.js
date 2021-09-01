@@ -14,7 +14,8 @@ export const home = async (req, res) => {
 export const watch = async (req, res) => {
   //ES6 way
   const { id } = req.params;
-  const video = await Video.findById(id).populate("owner");
+  const video = await Video.findById(id).populate("owner").populate("comments");
+  console.log(video);
   if (!video)
     return res.status("404").render("404", { pageTitle: "Video not found!" });
   return res.render("watch", { pageTitle: video.title, video });
@@ -147,21 +148,30 @@ export const registerView = async (req, res) => {
 
 export const createComment = async (req, res) => {
   const {
-    session: { user },
+    session: { user: sessionUser },
     params: { id: videoId },
-    body: { text: comment },
+    body: { text: text },
   } = req;
 
   const video = await Video.findById(videoId);
-  // const user = await User.findById(user._id);
+  const user = await User.findById(sessionUser._id);
 
-  await Comment.create({
-    author: user._id,
+  if (!video || !user) return res.sendStatus("404");
+
+  const comment = await Comment.create({
+    author: sessionUser._id,
     video: videoId,
-    comment,
+    comment: text,
   });
 
-  if (!video) return res.sendStatus("404");
+  try {
+    video.comments.push(comment._id);
+    user.comments.push(comment._id);
+    video.save();
+    user.save();
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.sendStatus("201");
 };
