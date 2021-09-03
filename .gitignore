@@ -2,3 +2,5 @@
 .env
 /uploads
 /assets
+.DS_Store
+/build

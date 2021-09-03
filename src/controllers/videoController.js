@@ -156,7 +156,7 @@ export const createComment = async (req, res) => {
   const video = await Video.findById(videoId);
   const user = await User.findById(sessionUser._id);
 
-  if (!video || !user) return res.sendStatus("404");
+  if (!video || !user) return res.sendStatus(404);
 
   const comment = await Comment.create({
     author: sessionUser._id,
@@ -173,5 +173,18 @@ export const createComment = async (req, res) => {
     console.log(error);
   }
 
-  return res.sendStatus("201");
+  return res.status(201).json({
+    commentId: comment._id,
+  });
+};
+
+export const deleteComment = async (req, res) => {
+  const { id } = req.params;
+  // const {
+  //   body: { commentId },
+  // } = req;
+  // await Comment.findByIdAndDelete(commentId);
+  await Comment.findByIdAndRemove(id);
+
+  return res.end();
 };
