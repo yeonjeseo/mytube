@@ -8,15 +8,6 @@ const commentSchema = new mongoose.Schema({
   comment: { type: String, require: true },
 });
 
-commentSchema.pre("findOneAndRemove", async function () {
-  const commentId = this._id;
-  const userId = this.author;
-  const user = await User.findById(userId);
-  const idx = user.comments.findIndex((id) => id === commentId);
-  user.comments.splice(idx, 1);
-  user.save();
-});
-
 const Comment = mongoose.model("Comment", commentSchema);
 
 export default Comment;

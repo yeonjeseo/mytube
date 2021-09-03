@@ -9,8 +9,6 @@ module.exports = {
     recorder: JS_PATH + "recorder.js",
     comment: JS_PATH + "commentSection.js",
   },
-  mode: "development",
-  watch: true,
   plugins: [
     new MiniCssExtractPlugin({
       filename: "css/styles.css",

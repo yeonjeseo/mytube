@@ -1,5 +1,6 @@
 //Initialize Application
 // import whole file
+import "regenerator-runtime/runtime.js";
 import "dotenv/config";
 import "./db";
 import "./models/Video";
