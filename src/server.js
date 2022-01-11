@@ -17,11 +17,13 @@ const logger = morgan("dev");
 app.set("view engine", "pug");
 // Set lookup folder for the views
 app.set("views", process.cwd() + "/src/views");
+
 // app.use((req, res, next) => {
 //   res.header("Cross-Origin-Embedder-Policy", "require-corp");
 //   res.header("Cross-Origin-Opener-Policy", "same-origin");
 //   next();
 // });
+
 // let express uderstands and transforms the form values into javascript
 app.use(express.urlencoded({ extended: true }));
 // let express to understands the text data
@@ -40,7 +42,6 @@ app.use(
   })
 );
 app.use(flash());
-
 app.use(localsMiddlewares);
 app.use("/", globalRouter);
 app.use("/users", usersRouter);
@@ -48,10 +49,5 @@ app.use("/videos", videoRouter);
 app.use("/api", apiRouter);
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static("assets"));
-
-const handleLogin = (req, res) => {
-  return res.send({ message: "login" });
-};
-app.get("/login", handleLogin);
 
 export default app;
